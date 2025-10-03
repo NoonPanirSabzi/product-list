@@ -73,3 +73,60 @@
 .txt-semi-bold {
   font-weight: 600;
 }
+
+body {
+  padding: 1.5rem;
+  background-color: var(--color-rose-50);
+}
+
+img {
+  inline-size: 100%;
+}
+
+h1 {
+  color: var(--color-rose-900);
+  margin-bottom: 2rem;
+}
+
+.dessert__img {
+  margin-block-end: 2.375rem;
+  position: relative;
+}
+
+.dessert__img > img {
+  border-radius: 0.5rem;
+}
+
+.btn-add-to-cart {
+  appearance: none;
+  background-color: var(--color-white);
+  color: var(--color-rose-900);
+  border: 0.0625rem solid var(--color-rose-400);
+  border-radius: 62.4375rem;
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translate(-50%, 50%);
+  padding: 0.75rem 1.75rem;
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.btn-add-to-cart > img {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.dessert__category {
+  color: var(--color-rose-500);
+}
+
+.dessert__name {
+  color: var(--color-rose-900);
+  margin-block: 0.25rem;
+}
+
+.dessert_price {
+  color: var(--color-red);
+}

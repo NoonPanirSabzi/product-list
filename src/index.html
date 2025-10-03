@@ -16,8 +16,37 @@
       href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@300..700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
 
     <title>Product list</title>
   </head>
-  <body></body>
+  <body>
+    <header>
+      <h1 class="txt-1">Desserts</h1>
+    </header>
+    <main>
+      <div class="desserts-container">
+        <div class="dessert">
+          <div class="dessert__img">
+            <img
+              src="./assets/images/image-waffle-mobile.jpg"
+              alt="dessert image"
+            />
+            <button type="button" class="txt-4 txt-semi-bold btn-add-to-cart">
+              <img
+                src="./assets/images/icon-add-to-cart.svg"
+                alt="add to cart icon"
+              />Add to Cart
+            </button>
+          </div>
+          <div class="dessert__info">
+            <p class="dessert__category txt-4">Waffle</p>
+            <p class="dessert__name txt-3">Waffle with Berries</p>
+            <p class="dessert_price txt-3">$6.50</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>
