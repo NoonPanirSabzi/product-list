@@ -1,0 +1,75 @@
+:root {
+  /* Color */
+  --color-red: #c73b0f;
+  --color-green: #1ea575;
+  --color-black: #000;
+  --color-white: #fff;
+  --color-rose-900: #260f08;
+  --color-rose-500: #87635a;
+  --color-rose-400: #ad8a85;
+  --color-rose-300: #caafa7;
+  --color-rose-100: #f5eeec;
+  --color-rose-50: #fcf8f6;
+
+  /* Spacing */
+  --spacing-50: 4px;
+  --spacing-100: 8px;
+  --spacing-150: 12px;
+  --spacing-200: 16px;
+  --spacing-300: 24px;
+  --spacing-400: 32px;
+  --spacing-500: 40px;
+  --spacing-1100: 88px;
+
+  /* Font Size */
+  --font-size-txt-1: 40px;
+  --font-size-txt-2: 24px;
+  --font-size-txt-3: 16px;
+  --font-size-txt-4: 14px;
+
+  /* Line Hieght */
+  --line-height-txt-1: 1.2;
+  --line-height-txt-2: 1.25;
+  --line-height-txt-3: 1.5;
+  --line-height-txt-4: 1.5;
+
+  /* Font Weight */
+  --font-weight-txt-1: 700;
+  --font-weight-txt-2: 700;
+  --font-weight-txt-3: 600;
+  --font-weight-txt-4: 400;
+}
+
+:is(.txt-1, .txt-2, .txt-3, .txt-4) {
+  font-family: "Red Hat Text", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.txt-1 {
+  font-size: var(--font-size-txt-1);
+  font-weight: var(--font-weight-txt-1);
+  line-height: var(--line-height-txt-1);
+}
+
+.txt-2 {
+  font-size: var(--font-size-txt-2);
+  font-weight: var(--font-weight-txt-2);
+  line-height: var(--line-height-txt-2);
+}
+
+.txt-3 {
+  font-size: var(--font-size-txt-3);
+  font-weight: var(--font-weight-txt-3);
+  line-height: var(--line-height-txt-3);
+}
+
+.txt-4 {
+  font-size: var(--font-size-txt-4);
+  font-weight: var(--font-weight-txt-4);
+  line-height: var(--line-height-txt-4);
+}
+
+.txt-semi-bold {
+  font-weight: 600;
+}
