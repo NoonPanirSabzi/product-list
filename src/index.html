@@ -23,7 +23,20 @@
   </head>
   <body>
     <header>
-      <h1 class="txt-1">Desserts</h1>
+      <div class="header-bar">
+        <h1 class="txt-1">Desserts</h1>
+        <button type="button" class="btn-cart txt-3">Cart</button>
+      </div>
+      <section class="cart hidden">
+        <h2 class="txt-2">Your Cart (<span>0</span>)</h2>
+        <div class="empty-placeholder">
+          <img
+            src="./assets/images/illustration-empty-cart.svg"
+            alt="empty image"
+          />
+          <p class="txt-4 txt-semi-bold">Your added items will appear here</p>
+        </div>
+      </section>
     </header>
     <main>
       <div class="desserts-container">
