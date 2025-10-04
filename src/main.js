@@ -1,6 +1,14 @@
 const elements = {
+  toggleCartBtn: document.getElementById("btn-cart"),
+  cart: document.getElementById("cart"),
   dessertsContainer: document.getElementById("desserts-container"),
 };
+
+function handleToggleCartBtn() {
+  const current = window.getComputedStyle(elements.cart).display;
+  const next = current === "none" ? "block" : "none";
+  elements.cart.style.display = next;
+}
 
 function fetchDataAndTemplate() {
   const dataPromise = fetch("./data.json").then((r) => r.json());
@@ -27,6 +35,7 @@ function showDessertItems(data, dessertTemplate) {
 }
 
 async function main() {
+  elements.toggleCartBtn.addEventListener("click", handleToggleCartBtn);
   const [data, template] = await fetchDataAndTemplate();
   showDessertItems(data, template);
 }
