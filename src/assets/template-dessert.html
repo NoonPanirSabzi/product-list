@@ -1,0 +1,35 @@
+<!-- Guide
+  dssrtid : id
+  dssrtimgdesk : image.desktop
+  dssrtimgtab : image.tablet
+  dssrtimgmob : image.mobile
+  dssrtname : name
+  dssrtcat: category
+  dssrtprc: price
+ -->
+<div class="dessert" id="dessert-dssrtid">
+  <div class="dessert__img">
+    <picture>
+      <source
+        media="(min-width: 80em)"
+        srcset="dssrtimgdesk"
+      />
+      <source
+        media="(min-width: 48em)"
+        srcset="dssrtimgtab"
+      />
+      <img src="dssrtimgmob" alt="dssrtname image" />
+    </picture>
+    <button type="button" class="txt-4 txt-semi-bold btn-add-to-cart">
+      <img
+        src="./assets/images/icon-add-to-cart.svg"
+        alt="add dssrtname to cart icon"
+      />Add to Cart
+    </button>
+  </div>
+  <div class="dessert__info">
+    <p class="dessert__category txt-4">dssrtcat</p>
+    <p class="dessert__name txt-3">dssrtname</p>
+    <p class="dessert_price txt-3">dssrtprc</p>
+  </div>
+</div>
