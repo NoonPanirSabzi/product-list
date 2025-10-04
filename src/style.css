@@ -186,6 +186,28 @@ h1 {
   block-size: 1.25rem;
 }
 
+.btn-item-qty {
+  appearance: none;
+  background-color: var(--color-red);
+  color: var(--color-white);
+  border: 0.0625rem solid var(--color-red);
+  border-radius: 62.4375rem;
+  left: 50%;
+  bottom: 0.25rem;
+  transform: translate(-50%, 50%);
+  padding: var(--spacing-150);
+  min-width: 10.25rem;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-item-qty > img {
+  cursor: pointer;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
 .dessert__category {
   color: var(--color-rose-500);
 }
