@@ -11,7 +11,25 @@ class ShoppingCart {
   }
 
   addProduct(id) {
-    this.items.set(id, {p: appProducts.get(id), qty: 1});
+    this.items.set(id, { p: appProducts.get(id), qty: 1 });
+  }
+
+  removeProduct(id) {
+    this.items.delete(id);
+  }
+
+  updateItemQuantity(id, delta) {
+    let currentQty = this.getItemQuantity(id);
+    const nextQty = currentQty + delta;
+    if (nextQty === 0) {
+      this.removeProduct(id);
+      return -1;
+    } 
+    this.items.get(id).qty = nextQty;
+  }
+
+  getItemQuantity(id) {
+    return this.items.get(id)?.qty ?? 0;
   }
 }
 
@@ -52,15 +70,30 @@ function addAppProducts(data) {
 }
 
 function addProductBtnsListeners(shpCart) {
-  const itemNodes = elements.dessertsContainer.querySelectorAll(".dessert")
+  const itemNodes = elements.dessertsContainer.querySelectorAll(".dessert");
   itemNodes.forEach((item) => {
+    const itemID = Number(item.id.slice(8));
     const addToCartBtn = item.querySelector(".btn-add-to-cart");
     const itemQtyBtn = item.querySelector(".btn-item-qty");
-    const itemID = Number(item.id.slice(8));
+    const itemQtySpan = item.querySelector(`#dessert-qty-${itemID}`);
     addToCartBtn.addEventListener("click", () => {
       addToCartBtn.classList.toggle("hidden");
       itemQtyBtn.classList.toggle("hidden");
       shpCart.addProduct(itemID);
+    });
+    itemQtyBtn.addEventListener("click", (e) => {
+      if (e.target.getAttribute("data-action") === "inc-qty") {
+        shpCart.updateItemQuantity(itemID, +1);
+        itemQtySpan.textContent = shpCart.getItemQuantity(itemID);
+      } else if (e.target.getAttribute("data-action") === "dec-qty") {
+        if (shpCart.updateItemQuantity(itemID, -1) === -1) {
+          itemQtySpan.textContent = 1;
+          addToCartBtn.classList.toggle("hidden");
+          itemQtyBtn.classList.toggle("hidden");
+          return;
+        }
+        itemQtySpan.textContent = shpCart.getItemQuantity(itemID);
+      }
     });
   });
 }
