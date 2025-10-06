@@ -216,6 +216,7 @@ h1 {
 }
 
 .confirm-order {
+  inline-size: 100%;
   appearance: none;
   padding-block: var(--spacing-200);
   border: none;
@@ -229,6 +230,73 @@ hr {
   background-color: var(--color-rose-100);
   border: none;
   block-size: 0.0625rem;
+}
+
+.confirm-modal {
+  border: none;
+  border-start-start-radius: 1.5rem;
+  border-start-end-radius: 1.5rem;
+  min-inline-size: min(100vw, 37.5rem);
+  background-color: var(--color-white);
+  padding: var(--spacing-300);
+  z-index: 3;
+  position: fixed;
+  inset: unset;
+  left: 50%;
+  transform: translate(-50%);
+  bottom: 0;
+}
+
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-info > img {
+  inline-size: 3rem;
+  block-size: 3rem;
+}
+
+.modal-info > h2 {
+  margin-block: var(--spacing-300) var(--spacing-100);
+  color: var(--color-rose-900);
+}
+
+.modal-info > p {
+  color: var(--color-rose-500);
+  font-family: "Red Hat Text", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.modal-content {
+  margin-block: var(--spacing-400);
+  padding: var(--spacing-300);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-300);
+}
+
+.modal-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.confirmed-item {
+  display: flex;
+  align-items: center;
+}
+
+.confirmed-item > img {
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 0.25rem;
+  margin-inline-end: var(--spacing-200);
+}
+
+.confirmed-item__total-price {
+  color: var(--color-rose-900);
+  margin-inline-start: auto;
 }
 
 .desserts-container {
@@ -328,6 +396,14 @@ hr {
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: var(--spacing-300);
     row-gap: var(--spacing-400);
+  }
+
+  .confirm-modal {
+    padding: var(--spacing-500);
+    border-radius: 0.75rem;
+    bottom: unset;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 

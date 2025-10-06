@@ -62,6 +62,27 @@
     </header>
     <main>
       <div class="desserts-container" id="desserts-container"></div>
+      <dialog class="confirm-modal" id="confirm-modal">
+        <div class="modal-info">
+          <img
+            src="./assets/images/icon-order-confirmed.svg"
+            alt="order confirmed icon"
+          />
+          <h2 class="txt-1">Order Confirmed</h2>
+          <p>We hope you enjoy your food!</p>
+        </div>
+        <div class="modal-content">
+          <div class="modal-items" id="modal-items-container"></div>
+          <hr />
+          <div class="order-total">
+            <span class="txt-4">Order Total</span>
+            <span class="txt-2" id="modal-order-total">$1.00</span>
+          </div>
+        </div>
+        <button class="confirm-order txt-3" id="btn-modal">
+          Start New Order
+        </button>
+      </dialog>
     </main>
   </body>
 </html>
