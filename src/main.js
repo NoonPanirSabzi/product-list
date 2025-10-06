@@ -45,12 +45,13 @@ class ShoppingCart {
     this.orderTotal = 0;
     this.orderCount = 0;
     let total = [];
-    this.items.forEach((v) => {
+    this.items.forEach((v, k) => {
       const price = Number(v.p.price);
       const totalPrice = price * v.qty;
       this.orderTotal += totalPrice;
       this.orderCount += v.qty;
       total.push({
+        id: k,
         name: v.p.name,
         singlePrice: price,
         quantity: v.qty,
@@ -121,6 +122,7 @@ function updateCartUI(shpCart) {
   let HTML = "";
   data.forEach((item) => {
     HTML += cartItemTemplate
+      .replaceAll("dssrtid", item.id)
       .replaceAll("dssrtname", item.name)
       .replaceAll("dssrtqty", item.quantity)
       .replaceAll("dssrtprc", item.singlePrice)
@@ -161,6 +163,20 @@ function addProductBtnsListeners(shpCart) {
   });
 }
 
+function handleCartClick(e, shpCart) {
+  if (e.target.id === "btn-confirm-order") {
+    undefined;
+  } else if (e.target.getAttribute("data-action") === "remove-cart-item") {
+    const itemID = Number(e.target.getAttribute("data-id"));
+    shpCart.removeProduct(itemID);
+    updateCartUI(shpCart);
+    const itemNode = document.getElementById(`dessert-${itemID}`);
+    itemNode.querySelector(".btn-add-to-cart").classList.remove("hidden");
+    itemNode.querySelector(".btn-item-qty").classList.add("hidden");
+    itemNode.querySelector(`#dessert-qty-${itemID}`).textContent = 1;
+  }
+}
+
 async function main() {
   const shoppingCart = new ShoppingCart();
   elements.toggleCartBtn.addEventListener("click", handleToggleCartBtn);
@@ -177,6 +193,7 @@ async function main() {
     r.text()
   );
   addProductBtnsListeners(shoppingCart);
+  elements.cart.addEventListener("click", (e) => handleCartClick(e, shoppingCart));
 }
 
 main();
