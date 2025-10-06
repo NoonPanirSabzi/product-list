@@ -164,6 +164,12 @@ function addProductBtnsListeners(shpCart) {
 async function main() {
   const shoppingCart = new ShoppingCart();
   elements.toggleCartBtn.addEventListener("click", handleToggleCartBtn);
+  /* set cart display property to default (remove inline css by above click handler)
+     when window width switches between desktop and mobile
+  */
+  window.matchMedia("(min-width: 80em)").addEventListener("change", () => {
+    elements.cart.style.removeProperty("display");
+  });
   const [data, template] = await fetchDataAndTemplate();
   showDessertItems(data, template);
   addAppProducts(data);
