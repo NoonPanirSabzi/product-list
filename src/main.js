@@ -1,13 +1,22 @@
 const elements = {
   toggleCartBtn: document.getElementById("btn-cart"),
   cart: document.getElementById("cart"),
+  cartShowEmpty: document.getElementById("cart-empty-content"),
+  cartShowContent: document.getElementById("cart-content"),
+  cartCountUI: document.getElementById("cart-count"),
+  itemsContainer: document.getElementById("items-container"),
+  cartOrderTotal: document.getElementById("cart-order-total"),
+  confirmOrderBtn: document.getElementById("btn-confirm-order"),
   dessertsContainer: document.getElementById("desserts-container"),
 };
 const appProducts = new Map();
+let cartItemTemplate = null;
 
 class ShoppingCart {
   constructor() {
     this.items = new Map();
+    this.orderTotal = 0;
+    this.orderCount = 0;
   }
 
   addProduct(id) {
@@ -24,12 +33,39 @@ class ShoppingCart {
     if (nextQty === 0) {
       this.removeProduct(id);
       return -1;
-    } 
+    }
     this.items.get(id).qty = nextQty;
   }
 
   getItemQuantity(id) {
     return this.items.get(id)?.qty ?? 0;
+  }
+
+  getTotal() {
+    this.orderTotal = 0;
+    this.orderCount = 0;
+    let total = [];
+    this.items.forEach((v) => {
+      const price = Number(v.p.price);
+      const totalPrice = price * v.qty;
+      this.orderTotal += totalPrice;
+      this.orderCount += v.qty;
+      total.push({
+        name: v.p.name,
+        singlePrice: price,
+        quantity: v.qty,
+        totalPrice: totalPrice,
+      });
+    });
+    return total;
+  }
+
+  getOrderTotal() {
+    return this.orderTotal;
+  }
+
+  getOrderCount() {
+    return this.orderCount;
   }
 }
 
@@ -69,6 +105,30 @@ function addAppProducts(data) {
   });
 }
 
+function updateCartUI(shpCart) {
+  const data = shpCart.getTotal();
+  const orderTotal = shpCart.getOrderTotal();
+  const orderCount = shpCart.getOrderCount();
+  elements.cartCountUI.textContent = orderCount;
+  if (orderCount === 0) {
+    elements.cartShowEmpty.classList.remove("hidden");
+    elements.cartShowContent.classList.add("hidden");
+    return;
+  }
+  elements.cartShowEmpty.classList.add("hidden");
+  elements.cartShowContent.classList.remove("hidden");
+  elements.cartOrderTotal.textContent = `$${orderTotal}`;
+  let HTML = "";
+  data.forEach((item) => {
+    HTML += cartItemTemplate
+      .replaceAll("dssrtname", item.name)
+      .replaceAll("dssrtqty", item.quantity)
+      .replaceAll("dssrtprc", item.singlePrice)
+      .replaceAll("dssrtttl", item.totalPrice);
+  });
+  elements.itemsContainer.innerHTML = HTML;
+}
+
 function addProductBtnsListeners(shpCart) {
   const itemNodes = elements.dessertsContainer.querySelectorAll(".dessert");
   itemNodes.forEach((item) => {
@@ -80,19 +140,22 @@ function addProductBtnsListeners(shpCart) {
       addToCartBtn.classList.toggle("hidden");
       itemQtyBtn.classList.toggle("hidden");
       shpCart.addProduct(itemID);
+      updateCartUI(shpCart);
     });
     itemQtyBtn.addEventListener("click", (e) => {
       if (e.target.getAttribute("data-action") === "inc-qty") {
         shpCart.updateItemQuantity(itemID, +1);
         itemQtySpan.textContent = shpCart.getItemQuantity(itemID);
+        updateCartUI(shpCart);
       } else if (e.target.getAttribute("data-action") === "dec-qty") {
         if (shpCart.updateItemQuantity(itemID, -1) === -1) {
           itemQtySpan.textContent = 1;
           addToCartBtn.classList.toggle("hidden");
           itemQtyBtn.classList.toggle("hidden");
-          return;
+        } else {
+          itemQtySpan.textContent = shpCart.getItemQuantity(itemID);
         }
-        itemQtySpan.textContent = shpCart.getItemQuantity(itemID);
+        updateCartUI(shpCart);
       }
     });
   });
@@ -104,6 +167,9 @@ async function main() {
   const [data, template] = await fetchDataAndTemplate();
   showDessertItems(data, template);
   addAppProducts(data);
+  cartItemTemplate = await fetch("./assets/template-cart-item.html").then((r) =>
+    r.text()
+  );
   addProductBtnsListeners(shoppingCart);
 }
 
