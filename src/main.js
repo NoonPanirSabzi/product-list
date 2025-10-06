@@ -120,13 +120,17 @@ function updateCartUI(shpCart) {
   elements.cartShowContent.classList.remove("hidden");
   elements.cartOrderTotal.textContent = `$${orderTotal}`;
   let HTML = "";
-  data.forEach((item) => {
+  data.forEach((item, i) => {
     HTML += cartItemTemplate
       .replaceAll("dssrtid", item.id)
       .replaceAll("dssrtname", item.name)
       .replaceAll("dssrtqty", item.quantity)
       .replaceAll("dssrtprc", item.singlePrice)
       .replaceAll("dssrtttl", item.totalPrice);
+    if (i !== data.length - 1) {
+      console.log(i , data.length);
+      HTML += '<hr>'
+    }
   });
   elements.itemsContainer.innerHTML = HTML;
 }
