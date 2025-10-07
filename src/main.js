@@ -25,8 +25,8 @@ class ShoppingCart {
     this.orderCount = 0;
   }
 
-  addProduct(id) {
-    this.items.set(id, { p: appProducts.get(id), qty: 1 });
+  addProduct(id, quantity) {
+    this.items.set(id, { p: appProducts.get(id), qty: quantity });
   }
 
   removeProduct(id) {
@@ -130,6 +130,28 @@ function addAppProducts(data) {
   });
 }
 
+function updateItemsUI(itemsData) {
+  itemsData.forEach(({ id, qty }) => {
+    const node = document.getElementById(`dessert-${id}`);
+    const img = node.querySelector(".dessert__img > picture img");
+    const addToCartBtn = node.querySelector(".btn-add-to-cart");
+    const itemQtyBtn = node.querySelector(".btn-item-qty");
+    const itemQtySpan = node.querySelector(`#dessert-qty-${id}`);
+    img.classList.add("selected");
+    addToCartBtn.classList.add("hidden");
+    itemQtyBtn.classList.remove("hidden");
+    itemQtySpan.textContent = qty;
+  });
+}
+
+function saveData(shpCart) {
+  const data = [];
+  shpCart
+    .getTotal()
+    .forEach((item) => data.push({ id: item.id, qty: item.quantity }));
+  localStorage.setItem("dezertsListData", JSON.stringify(data));
+}
+
 function updateCartUI(shpCart) {
   const data = shpCart.getTotal();
   const orderTotal = shpCart.getOrderTotal();
@@ -161,6 +183,18 @@ function updateCartUI(shpCart) {
   elements.itemsContainer.innerHTML = HTML;
 }
 
+function loadData() {
+  const Cart = new ShoppingCart();
+  const savedData = JSON.parse(localStorage.getItem("dezertsListData")) ?? [];
+  if (savedData.length === 0) {
+    return Cart;
+  }
+  savedData.forEach((item) => Cart.addProduct(item.id, item.qty));
+  updateCartUI(Cart);
+  updateItemsUI(savedData);
+  return Cart;
+}
+
 function addProductBtnsListeners(shpCart) {
   const itemNodes = elements.dessertsContainer.querySelectorAll(".dessert");
   itemNodes.forEach((item) => {
@@ -174,14 +208,16 @@ function addProductBtnsListeners(shpCart) {
       itemQtyBtn.classList.toggle("hidden");
       itemQtySpan.textContent = 1;
       itemImg.classList.add("selected");
-      shpCart.addProduct(itemID);
+      shpCart.addProduct(itemID, 1);
       updateCartUI(shpCart);
+      saveData(shpCart);
     });
     itemQtyBtn.addEventListener("click", (e) => {
       if (e.target.getAttribute("data-action") === "inc-qty") {
         shpCart.updateItemQuantity(itemID, +1);
         itemQtySpan.textContent = shpCart.getItemQuantity(itemID);
         updateCartUI(shpCart);
+        saveData(shpCart);
       } else if (e.target.getAttribute("data-action") === "dec-qty") {
         if (shpCart.updateItemQuantity(itemID, -1) === -1) {
           itemQtySpan.textContent = 1;
@@ -192,6 +228,7 @@ function addProductBtnsListeners(shpCart) {
           itemQtySpan.textContent = shpCart.getItemQuantity(itemID);
         }
         updateCartUI(shpCart);
+        saveData(shpCart);
       }
     });
   });
@@ -232,10 +269,11 @@ function handleCartClick(e, shpCart) {
     itemNode.querySelector(".btn-add-to-cart").classList.remove("hidden");
     itemNode.querySelector(".btn-item-qty").classList.add("hidden");
     itemNode.querySelector(`#dessert-qty-${itemID}`).textContent = 1;
+    saveData(shpCart);
   }
 }
 
-function resetDessertItems() {
+function resetItemsUI() {
   elements.dessertsContainer
     .querySelectorAll(".btn-item-qty:not(.hidden)")
     .forEach((btn) => btn.classList.add("hidden"));
@@ -248,7 +286,6 @@ function resetDessertItems() {
 }
 
 async function main() {
-  const shoppingCart = new ShoppingCart();
   elements.toggleCartBtn.addEventListener("click", handleToggleCartBtn);
   /* set cart display property to default (remove inline css by above click handler)
      when window width switches between desktop and mobile
@@ -269,6 +306,7 @@ async function main() {
     cartItemTemplatePromise,
     confirmedItemTemplatePromise,
   ]);
+  const shoppingCart = loadData();
   addProductBtnsListeners(shoppingCart);
   elements.cart.addEventListener("click", (e) =>
     handleCartClick(e, shoppingCart)
@@ -276,9 +314,10 @@ async function main() {
   elements.modalBtn.addEventListener("click", () => {
     shoppingCart.clearCart();
     updateCartUI(shoppingCart);
-    resetDessertItems();
+    resetItemsUI();
     elements.confirmModal.close();
     elements.cart.style.removeProperty("display");
+    saveData(shoppingCart);
   });
 }
 
