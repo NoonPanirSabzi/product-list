@@ -60,7 +60,7 @@ class ShoppingCart {
         name: v.p.name,
         singlePrice: price,
         quantity: v.qty,
-        totalPrice: totalPrice,
+        totalPrice: (totalPrice).toFixed(2),
         thumbnail: v.p.thumb,
       });
     });
@@ -68,7 +68,7 @@ class ShoppingCart {
   }
 
   getOrderTotal() {
-    return this.orderTotal;
+    return (this.orderTotal).toFixed(2);
   }
 
   getOrderCount() {
