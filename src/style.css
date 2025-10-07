@@ -119,6 +119,8 @@ img {
 }
 
 .cart {
+  max-height: 45vh;
+  overflow-y: scroll;
   padding: var(--spacing-300);
   background-color: var(--color-white);
   border-radius: 0.75rem;
@@ -434,6 +436,8 @@ hr {
     top: 0;
     right: 0;
     inline-size: 24rem;
+    max-height: unset;
+    overflow-y: unset;
   }
 
   .btn-cart {
