@@ -74,6 +74,12 @@ class ShoppingCart {
   getOrderCount() {
     return this.orderCount;
   }
+
+  clearCart() {
+    this.orderTotal = 0;
+    this.orderCount = 0;
+    this.items.clear();
+  }
 }
 
 function handleToggleCartBtn() {
@@ -154,6 +160,7 @@ function addProductBtnsListeners(shpCart) {
     addToCartBtn.addEventListener("click", () => {
       addToCartBtn.classList.toggle("hidden");
       itemQtyBtn.classList.toggle("hidden");
+      itemQtySpan.textContent = 1;
       shpCart.addProduct(itemID);
       updateCartUI(shpCart);
     });
@@ -210,6 +217,15 @@ function handleCartClick(e, shpCart) {
   }
 }
 
+function resetDessertItemBtns() {
+  elements.dessertsContainer
+    .querySelectorAll(".btn-item-qty:not(.hidden)")
+    .forEach((btn) => btn.classList.add("hidden"));
+  elements.dessertsContainer
+    .querySelectorAll(".btn-add-to-cart.hidden")
+    .forEach((btn) => btn.classList.remove("hidden"));
+}
+
 async function main() {
   const shoppingCart = new ShoppingCart();
   elements.toggleCartBtn.addEventListener("click", handleToggleCartBtn);
@@ -236,6 +252,13 @@ async function main() {
   elements.cart.addEventListener("click", (e) =>
     handleCartClick(e, shoppingCart)
   );
+  elements.modalBtn.addEventListener("click", () => {
+    shoppingCart.clearCart();
+    updateCartUI(shoppingCart);
+    resetDessertItemBtns();
+    elements.confirmModal.close();
+    elements.cart.style.removeProperty("display");
+  });
 }
 
 main();
