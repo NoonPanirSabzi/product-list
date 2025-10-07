@@ -5,12 +5,17 @@ const elements = {
   cartShowContent: document.getElementById("cart-content"),
   cartCountUI: document.getElementById("cart-count"),
   itemsContainer: document.getElementById("items-container"),
-  cartOrderTotal: document.getElementById("cart-order-total"),
+  cartOrderTotalSpan: document.getElementById("cart-order-total"),
   confirmOrderBtn: document.getElementById("btn-confirm-order"),
   dessertsContainer: document.getElementById("desserts-container"),
+  confirmModal: document.getElementById("confirm-modal"),
+  modalItemsContainer: document.getElementById("modal-items-container"),
+  modalOrderTotalSpan: document.getElementById("modal-order-total"),
+  modalBtn: document.getElementById("btn-modal"),
 };
 const appProducts = new Map();
 let cartItemTemplate = null;
+let confirmedItemTemplate = null;
 
 class ShoppingCart {
   constructor() {
@@ -46,8 +51,8 @@ class ShoppingCart {
     this.orderCount = 0;
     let total = [];
     this.items.forEach((v, k) => {
-      const price = Number(v.p.price);
-      const totalPrice = price * v.qty;
+      const price = v.p.price;
+      const totalPrice = Number(price) * v.qty;
       this.orderTotal += totalPrice;
       this.orderCount += v.qty;
       total.push({
@@ -56,6 +61,7 @@ class ShoppingCart {
         singlePrice: price,
         quantity: v.qty,
         totalPrice: totalPrice,
+        thumbnail: v.p.thumb,
       });
     });
     return total;
@@ -102,7 +108,11 @@ function showDessertItems(data, dessertTemplate) {
 
 function addAppProducts(data) {
   data.forEach((item) => {
-    appProducts.set(item.id, { name: item.name, price: item.price });
+    appProducts.set(item.id, {
+      name: item.name,
+      price: item.price,
+      thumb: item.image.thumbnail,
+    });
   });
 }
 
@@ -118,7 +128,7 @@ function updateCartUI(shpCart) {
   }
   elements.cartShowEmpty.classList.add("hidden");
   elements.cartShowContent.classList.remove("hidden");
-  elements.cartOrderTotal.textContent = `$${orderTotal}`;
+  elements.cartOrderTotalSpan.textContent = `$${orderTotal}`;
   let HTML = "";
   data.forEach((item, i) => {
     HTML += cartItemTemplate
@@ -128,8 +138,7 @@ function updateCartUI(shpCart) {
       .replaceAll("dssrtprc", item.singlePrice)
       .replaceAll("dssrtttl", item.totalPrice);
     if (i !== data.length - 1) {
-      console.log(i , data.length);
-      HTML += '<hr>'
+      HTML += "<hr>";
     }
   });
   elements.itemsContainer.innerHTML = HTML;
@@ -167,9 +176,29 @@ function addProductBtnsListeners(shpCart) {
   });
 }
 
+function showOrderConfirmation(shpCart) {
+  const data = shpCart.getTotal();
+  const orderTotal = shpCart.getOrderTotal();
+  elements.modalOrderTotalSpan.textContent = `$${orderTotal}`;
+  let html = "";
+  data.forEach((item, i) => {
+    html += confirmedItemTemplate
+      .replaceAll("dssrtname", item.name)
+      .replaceAll("dssrtthumb", item.thumbnail)
+      .replaceAll("dssrtcount", item.quantity)
+      .replaceAll("dssrtprice", item.singlePrice)
+      .replaceAll("dssrtttle", item.totalPrice);
+    if (i !== data.length - 1) {
+      html += "<hr>";
+    }
+  });
+  elements.modalItemsContainer.innerHTML = html;
+  elements.confirmModal.showModal();
+}
+
 function handleCartClick(e, shpCart) {
   if (e.target.id === "btn-confirm-order") {
-    undefined;
+    showOrderConfirmation(shpCart);
   } else if (e.target.getAttribute("data-action") === "remove-cart-item") {
     const itemID = Number(e.target.getAttribute("data-id"));
     shpCart.removeProduct(itemID);
@@ -193,11 +222,20 @@ async function main() {
   const [data, template] = await fetchDataAndTemplate();
   showDessertItems(data, template);
   addAppProducts(data);
-  cartItemTemplate = await fetch("./assets/template-cart-item.html").then((r) =>
-    r.text()
-  );
+  const cartItemTemplatePromise = fetch(
+    "./assets/template-cart-item.html"
+  ).then((r) => r.text());
+  const confirmedItemTemplatePromise = fetch(
+    "./assets/template-confirmed-item.html"
+  ).then((r) => r.text());
+  [cartItemTemplate, confirmedItemTemplate] = await Promise.all([
+    cartItemTemplatePromise,
+    confirmedItemTemplatePromise,
+  ]);
   addProductBtnsListeners(shoppingCart);
-  elements.cart.addEventListener("click", (e) => handleCartClick(e, shoppingCart));
+  elements.cart.addEventListener("click", (e) =>
+    handleCartClick(e, shoppingCart)
+  );
 }
 
 main();
