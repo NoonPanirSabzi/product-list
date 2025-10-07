@@ -205,9 +205,14 @@ h1 {
 }
 
 .btn-cart-remove-item {
+  color: #ad8a85;
   inline-size: 1.25rem;
   block-size: 1.25rem;
   cursor: pointer;
+}
+
+.btn-cart-remove-item:hover {
+  color: var(--color-rose-900);
 }
 
 .order-total {
@@ -241,6 +246,10 @@ h1 {
   background-color: var(--color-red);
   border-radius: 62.4375rem;
   cursor: pointer;
+}
+
+.confirm-order:hover {
+  background-color: #952c0b;
 }
 
 hr {
@@ -286,6 +295,8 @@ hr {
 }
 
 .modal-content {
+  background-color: var(--color-rose-50);
+  border-radius: 0.5rem;
   margin-block: var(--spacing-400);
   padding: var(--spacing-300);
   display: flex;
@@ -331,6 +342,10 @@ hr {
   border-radius: 0.5rem;
 }
 
+.dessert__img > picture img.selected {
+  border: 0.125rem solid var(--color-red);
+}
+
 .btn-add-to-cart {
   appearance: none;
   background-color: var(--color-white);
@@ -346,6 +361,11 @@ hr {
   gap: var(--spacing-100);
   cursor: pointer;
   min-width: 10.25rem;
+}
+
+.btn-add-to-cart:hover {
+  color: var(--color-red);
+  border-color: var(--color-red);
 }
 
 .btn-add-to-cart > img {
@@ -369,10 +389,17 @@ hr {
   justify-content: space-between;
 }
 
-.btn-item-qty > img {
+.btn-item-qty__modifier {
   cursor: pointer;
   inline-size: 1.25rem;
   block-size: 1.25rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.btn-item-qty__modifier:hover svg {
+  background-color: var(--color-white);
+  color: red;
 }
 
 .dessert__category {

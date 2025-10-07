@@ -61,7 +61,7 @@ class ShoppingCart {
         name: v.p.name,
         singlePrice: price,
         quantity: v.qty,
-        totalPrice: (totalPrice).toFixed(2),
+        totalPrice: totalPrice.toFixed(2),
         thumbnail: v.p.thumb,
       });
     });
@@ -69,7 +69,7 @@ class ShoppingCart {
   }
 
   getOrderTotal() {
-    return (this.orderTotal).toFixed(2);
+    return this.orderTotal.toFixed(2);
   }
 
   getOrderCount() {
@@ -107,7 +107,14 @@ function showDessertItems(data, dessertTemplate) {
       .replaceAll("dssrtimgmob", dessert.image.mobile)
       .replaceAll("dssrtname", dessert.name)
       .replaceAll("dssrtcat", dessert.category)
-      .replaceAll("dssrtprc", dessert.price);
+      .replaceAll("dssrtprc", dessert.price)
+      .replace(
+        "svgholderinc",
+        `<svg data-action="inc-qty" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path data-action="inc-qty" d="M10.0001 2.5C14.1251 2.5 17.5001 5.875 17.5001 10C17.5001 14.125 14.1251 17.5 10.0001 17.5C5.87512 17.5 2.50012 14.125 2.50012 10C2.50012 5.875 5.87512 2.5 10.0001 2.5ZM10.0001 1.25C5.18762 1.25 1.25012 5.1875 1.25012 10C1.25012 14.8125 5.18762 18.75 10.0001 18.75C14.8126 18.75 18.7501 14.8125 18.7501 10C18.7501 5.1875 14.8126 1.25 10.0001 1.25Z" fill="white"/>
+<path data-action="inc-qty" d="M15.0001 9.375H10.6251V5H9.37512V9.375H5.00012V10.625H9.37512V15H10.6251V10.625H15.0001V9.375Z" fill="currentColor"/>
+</svg>`
+      );
     items += dessertHTML;
   });
   elements.dessertsContainer.innerHTML = items;
@@ -158,6 +165,7 @@ function addProductBtnsListeners(shpCart) {
   const itemNodes = elements.dessertsContainer.querySelectorAll(".dessert");
   itemNodes.forEach((item) => {
     const itemID = Number(item.id.slice(8));
+    const itemImg = item.querySelector(".dessert__img > picture img");
     const addToCartBtn = item.querySelector(".btn-add-to-cart");
     const itemQtyBtn = item.querySelector(".btn-item-qty");
     const itemQtySpan = item.querySelector(`#dessert-qty-${itemID}`);
@@ -165,6 +173,7 @@ function addProductBtnsListeners(shpCart) {
       addToCartBtn.classList.toggle("hidden");
       itemQtyBtn.classList.toggle("hidden");
       itemQtySpan.textContent = 1;
+      itemImg.classList.add("selected");
       shpCart.addProduct(itemID);
       updateCartUI(shpCart);
     });
@@ -178,6 +187,7 @@ function addProductBtnsListeners(shpCart) {
           itemQtySpan.textContent = 1;
           addToCartBtn.classList.toggle("hidden");
           itemQtyBtn.classList.toggle("hidden");
+          itemImg.classList.remove("selected");
         } else {
           itemQtySpan.textContent = shpCart.getItemQuantity(itemID);
         }
@@ -205,6 +215,7 @@ function showOrderConfirmation(shpCart) {
   });
   elements.modalItemsContainer.innerHTML = html;
   elements.confirmModal.showModal();
+  elements.confirmModal.scrollTop = 0;
 }
 
 function handleCartClick(e, shpCart) {
@@ -215,19 +226,25 @@ function handleCartClick(e, shpCart) {
     shpCart.removeProduct(itemID);
     updateCartUI(shpCart);
     const itemNode = document.getElementById(`dessert-${itemID}`);
+    itemNode
+      .querySelector(".dessert__img > picture img")
+      .classList.remove("selected");
     itemNode.querySelector(".btn-add-to-cart").classList.remove("hidden");
     itemNode.querySelector(".btn-item-qty").classList.add("hidden");
     itemNode.querySelector(`#dessert-qty-${itemID}`).textContent = 1;
   }
 }
 
-function resetDessertItemBtns() {
+function resetDessertItems() {
   elements.dessertsContainer
     .querySelectorAll(".btn-item-qty:not(.hidden)")
     .forEach((btn) => btn.classList.add("hidden"));
   elements.dessertsContainer
     .querySelectorAll(".btn-add-to-cart.hidden")
     .forEach((btn) => btn.classList.remove("hidden"));
+  elements.dessertsContainer
+    .querySelectorAll(".dessert__img > picture img.selected")
+    .forEach((img) => img.classList.remove("selected"));
 }
 
 async function main() {
@@ -259,7 +276,7 @@ async function main() {
   elements.modalBtn.addEventListener("click", () => {
     shoppingCart.clearCart();
     updateCartUI(shoppingCart);
-    resetDessertItemBtns();
+    resetDessertItems();
     elements.confirmModal.close();
     elements.cart.style.removeProperty("display");
   });
