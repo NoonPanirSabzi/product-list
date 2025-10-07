@@ -1,5 +1,6 @@
 const elements = {
   toggleCartBtn: document.getElementById("btn-cart"),
+  toggleCartBtnNotif: document.getElementById("btn-cart-notif"),
   cart: document.getElementById("cart"),
   cartShowEmpty: document.getElementById("cart-empty-content"),
   cartShowContent: document.getElementById("cart-content"),
@@ -130,11 +131,14 @@ function updateCartUI(shpCart) {
   if (orderCount === 0) {
     elements.cartShowEmpty.classList.remove("hidden");
     elements.cartShowContent.classList.add("hidden");
+    elements.toggleCartBtnNotif.classList.add("hidden");
     return;
   }
   elements.cartShowEmpty.classList.add("hidden");
   elements.cartShowContent.classList.remove("hidden");
+  elements.toggleCartBtnNotif.classList.remove("hidden");
   elements.cartOrderTotalSpan.textContent = `$${orderTotal}`;
+  elements.toggleCartBtnNotif.textContent = orderCount;
   let HTML = "";
   data.forEach((item, i) => {
     HTML += cartItemTemplate
