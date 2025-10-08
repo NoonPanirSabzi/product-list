@@ -34,7 +34,7 @@ class ShoppingCart {
   }
 
   updateItemQuantity(id, delta) {
-    let currentQty = this.getItemQuantity(id);
+    const currentQty = this.getItemQuantity(id);
     const nextQty = currentQty + delta;
     if (nextQty === 0) {
       this.removeProduct(id);
